@@ -1,7 +1,7 @@
 # Classical genetic algorithm
 
 ## TODO list
-1. Binary chromosome representation
+1. Binary chromosome representation :white_check_mark:
 2. Selection methods:
    * Best selection
    * Tournament Selection
@@ -23,7 +23,7 @@
    * Variables number in fitness function
    * Population size
    * Epochs number
-   * Binary chromosome representation precision
+   * Binary chromosome representation precision :white_check_mark:
    * Selection methods parameters
    * Crossover probability
    * Mutation probability
