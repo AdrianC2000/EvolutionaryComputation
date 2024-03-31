@@ -31,7 +31,8 @@ class GeneticAlgorithm:
     def _initialize_population(self, population_size: int, variables_number: int) -> ndarray:
         return np.random.uniform(self.__bounds[0], self.__bounds[1], size=(population_size, variables_number))
 
-    def _get_best_individual(self, population: ndarray) -> Tuple[ndarray, float]:
+    @staticmethod
+    def _get_best_individual(population: ndarray) -> Tuple[ndarray, float]:
         fitnesses = [FitnessFunction.fitness_function(individual) for individual in population]
         best_index = np.argmax(fitnesses)
         return population[best_index], fitnesses[best_index]
