@@ -1,5 +1,8 @@
 import math
 
+import numpy as np
+from numpy import ndarray
+
 
 class BinaryEncoder:
 
@@ -10,6 +13,13 @@ class BinaryEncoder:
 
     def _calculate_binary_chain_length(self, precision: int) -> int:
         return math.ceil(math.log2(self.__limit_range * 10 ** precision + 1))
+
+    def encode_population(self, population: ndarray) -> ndarray:
+        return np.apply_along_axis(self._encode_individual, 1, population)
+
+    def _encode_individual(self, individual: ndarray) -> ndarray:
+        vectorized_method = np.vectorize(self.encode_to_binary)
+        return vectorized_method(individual)
 
     def encode_to_binary(self, number: float) -> str:
         fractional_part = (number - self.__limit_start) * (2 ** self.__binary_chain_length - 1) / self.__limit_range

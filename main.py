@@ -14,5 +14,5 @@ if __name__ == "__main__":
     inversion_probability = 0.5
     elitism_probability = 0.5
 
-    genetic_algorithm = GeneticAlgorithm(precision, bounds)
+    genetic_algorithm = GeneticAlgorithm(precision, bounds, selection_method)
     genetic_algorithm.find_best_solution(population_size, variables_number, epochs_number)
