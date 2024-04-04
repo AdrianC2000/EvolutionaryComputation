@@ -72,7 +72,7 @@ class SelectionAlgorithms:
         probabilities = fitness / fitness_sum
 
         if is_min_searched:
-            probabilities = 1 / probabilities
+            probabilities = 1 - probabilities
 
         indices = np.random.choice(len(population), size=selected_count, p=probabilities)
 
