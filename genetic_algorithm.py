@@ -35,11 +35,16 @@ class GeneticAlgorithm:
                 best_individual = new_best_individual
                 best_fitness = new_best_fitness
 
-            selected_parents_population = self.__selection_algorithms.select_parents(population)
+            # TODO -> kwargs must be configurable
+            selected_parents_population = self.__selection_algorithms.select_parents(population,
+                                                                                     tournaments_count=3,
+                                                                                     fraction_selected=0.5,
+                                                                                     is_min_searched=False)
             selected_parents_encoded = self.__binary_encoder.encode_population(selected_parents_population)
             children_encoded = self.__crossover_algorithms.perform_crossover(selected_parents_encoded)
             children_mutated = self.__mutation_algorithms.perform_mutation(children_encoded)
-            population = self.__binary_encoder.decode_population(children_mutated)
+            children = self.__binary_encoder.decode_population(children_mutated)
+            population = self._replace_population(population, children)
             # TODO -> add inversion operator
             # TODO -> add elitism strategy
 
@@ -47,6 +52,12 @@ class GeneticAlgorithm:
 
     def _initialize_population(self, population_size: int, variables_number: int) -> ndarray:
         return np.random.uniform(self.__bounds[0], self.__bounds[1], size=(population_size, variables_number))
+
+    @staticmethod
+    def _replace_population(population: ndarray, children: ndarray):
+        replacement_indices = np.random.choice(population.shape[0], size=children.shape[0], replace=False)
+        population[replacement_indices] = children
+        return population
 
     @staticmethod
     def _get_best_individual(population: ndarray) -> Tuple[ndarray, float]:

@@ -19,6 +19,11 @@ class CrossoverAlgorithms:
         descendants = np.empty_like(selected_parents_encoded)
 
         for i in range(0, len(selected_parents_encoded), 2):
+
+            if i + 1 >= len(selected_parents_encoded):
+                descendants[i] = selected_parents_encoded[i]
+                break
+
             parent_a = selected_parents_encoded[i]
             parent_b = selected_parents_encoded[i + 1]
             children = self.__crossover_method(parent_a, parent_b)
