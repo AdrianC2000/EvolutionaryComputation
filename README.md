@@ -18,7 +18,7 @@
    * Single-point :white_check_mark:
    * Two-point
 5. Inversion operator
-6. Elitism strategy
+6. Elitism strategy :white_check_mark:
 7. Configurable variables:
    * Variables number in fitness function
    * Population size :white_check_mark:
@@ -28,4 +28,4 @@
    * Crossover probability
    * Mutation probability :white_check_mark:
    * Inversion probability
-   * Elitism strategy - percentage or number of individuals passing to the next population
+   * Elitism strategy - percentage or number of individuals passing to the next population :white_check_mark:
