@@ -12,7 +12,7 @@
    * Three-point
    * Uniform
    * Grain
-   * Methods from project I
+   * Methods from project I (1/3)
 4. Mutation:
    * Boundary
    * Single-point :white_check_mark:
@@ -24,8 +24,14 @@
    * Population size :white_check_mark:
    * Epochs number :white_check_mark:
    * Binary chromosome representation precision :white_check_mark:
-   * Selection methods parameters
-   * Crossover probability
+   * Selection methods parameters :white_check_mark:
+   * Crossover probability :white_check_mark:
    * Mutation probability :white_check_mark:
    * Inversion probability
    * Elitism strategy - percentage or number of individuals passing to the next population :white_check_mark:
+8. GUI :white_check_mark:
+9. Test functions
+10. Saving the results to a file
+11. Plots:
+   * Fitness/iteration
+   * Mean fitness, std/iteration

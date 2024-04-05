@@ -1,6 +1,6 @@
 import numpy as np
 
-sexes_count = 5
+sexes_count = 2
 n = 10
 
 rng = np.random.default_rng()
