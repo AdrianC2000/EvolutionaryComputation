@@ -38,8 +38,8 @@ class GeneticAlgorithm:
             # TODO -> kwargs must be configurable
             selected_parents_population = self.__selection_algorithms.select_parents(population,
                                                                                      tournaments_count=3,
-                                                                                     fraction_selected=0.5,
-                                                                                     is_min_searched=False)
+                                                                                     fraction_selected=0.34,
+                                                                                     is_min_searched=True)
             selected_parents_encoded = self.__binary_encoder.encode_population(selected_parents_population)
             children_encoded = self.__crossover_algorithms.perform_crossover(selected_parents_encoded)
             children_mutated = self.__mutation_algorithms.perform_mutation(children_encoded)

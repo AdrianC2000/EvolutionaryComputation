@@ -17,7 +17,6 @@ class SelectionAlgorithms:
     def select_parents(self, population: ndarray, **kwargs) -> ndarray:
         return self.__selected_method(population, **kwargs)
 
-    # TODO -> test is_min_searched
     @staticmethod
     def _tournament_selection(population: ndarray, **kwargs) -> ndarray:
         selected_parents = []
@@ -49,7 +48,7 @@ class SelectionAlgorithms:
         selected_count = int(fraction_selected * len(fitness))
 
         if is_min_searched:
-            extremes = np.partition(fitness, selected_count)[selected_count:]
+            extremes = np.partition(fitness, selected_count)[:selected_count]
         else:
             extremes = np.partition(fitness, -selected_count)[-selected_count:]
 
@@ -68,11 +67,11 @@ class SelectionAlgorithms:
         if np.min(fitness) <= 0:
             fitness = fitness - np.min(fitness) + 1
 
+        if is_min_searched:
+            fitness = 1 / fitness
+
         fitness_sum = np.sum(fitness)
         probabilities = fitness / fitness_sum
-
-        if is_min_searched:
-            probabilities = 1 - probabilities
 
         indices = np.random.choice(len(population), size=selected_count, p=probabilities)
 

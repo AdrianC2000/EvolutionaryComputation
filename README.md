@@ -3,9 +3,9 @@
 ## TODO list
 1. Binary chromosome representation :white_check_mark:
 2. Selection methods:
-   * Best selection 
+   * Best selection :white_check_mark:
    * Tournament Selection :white_check_mark:
-   * Roulette Wheel Selection
+   * Roulette Wheel Selection :white_check_mark:
 3. Crossover methods:
    * Single-point :white_check_mark:
    * Two-point

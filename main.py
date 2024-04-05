@@ -6,7 +6,7 @@ if __name__ == "__main__":
     population_size = 100
     epochs_number = 100
     precision = 6
-    selection_method = "roulette"  # TODO - params
+    selection_method = "tournament"  # TODO - params
     crossover_method = "single-point"
     crossover_probability = 0.5
     mutation_method = "single-point"
