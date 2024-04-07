@@ -14,7 +14,7 @@ class GeneticAlgorithm:
 
     def __init__(self, precision: int, bounds: Tuple[int, int], variables_number: int, selection_method: str,
                  crossover_method: str, crossover_probability: float, mutation_method: str, mutation_rate: float,
-                 elitism_ratio: float, is_min_searched: bool = False, tournaments_count: int = 3,
+                 inversion_probability : float, elitism_ratio: float, is_min_searched: bool = False, tournaments_count: int = 3,
                  fraction_selected: float = 0.34):
         self.__bounds = bounds
         self.__binary_encoder = BinaryEncoder(precision, bounds[0], bounds[1])
@@ -28,6 +28,7 @@ class GeneticAlgorithm:
         self.__mutation_algorithms = MutationAlgorithms(mutation_method, mutation_rate,
                                                         self.__variables_number, binary_chain_length)
         self.__elitism_ratio = elitism_ratio
+        self.__inversion_probability = inversion_probability
         self.__is_min_searched = is_min_searched
 
     def find_best_solution(self, population_size: int, epochs_number: int) -> Tuple[ndarray, float]:
@@ -51,8 +52,8 @@ class GeneticAlgorithm:
             children_encoded = self.__crossover_algorithms.perform_crossover(selected_parents_encoded)
             children_mutated = self.__mutation_algorithms.perform_mutation(children_encoded)
             children = self.__binary_encoder.decode_population(children_mutated)
+            children = self._invert_segments(children)
             population = self._replace_population(population, children)
-            # TODO -> add inversion operator
 
         return best_individual, best_fitness
 
@@ -86,7 +87,15 @@ class GeneticAlgorithm:
 
         population[replacement_indices] = children
         return population
-
+    
+    def _invert_segments(self, children: ndarray):
+        length = self.__binary_encoder.get_binary_chain_length()
+        for individual in children:
+            if (np.random.random() < self.__inversion_probability):
+                point1, point2 = sorted(np.random.choice(range(1, length), 2, replace=False))
+                individual[point1:point2] = individual[point1:point2][::-1]
+        return children
+            
     @staticmethod
     def _get_best_individual(population: ndarray) -> Tuple[ndarray, float]:
         fitnesses = [FitnessFunction.fitness_function(individual) for individual in population]
