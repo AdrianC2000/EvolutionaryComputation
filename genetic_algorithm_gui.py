@@ -106,7 +106,8 @@ class GeneticAlgorithmGUI:
         genetic_algorithm = GeneticAlgorithm(self.precision.get(), bounds, self.variables_number.get(),
                                              self.selection_methods.get(), self.crossover_method.get(),
                                              self.crossover_probability.get(), self.mutation_method.get(),
-                                             self.mutation_rate.get(), self.elitism_ratio.get(), is_min_searched,
+                                             self.mutation_rate.get(), self.inversion_probability.get(),
+                                             self.elitism_ratio.get(), is_min_searched,
                                              self.tournaments_count.get(), self.fraction_selected.get())
 
         best_individual, best_fitness = genetic_algorithm.find_best_solution(self.population_size.get(),
