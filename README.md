@@ -27,7 +27,7 @@
    * Selection methods parameters :white_check_mark:
    * Crossover probability :white_check_mark:
    * Mutation probability :white_check_mark:
-   * Inversion probability
+   * Inversion probability :white_check_mark:
    * Elitism strategy - percentage or number of individuals passing to the next population :white_check_mark:
 8. GUI :white_check_mark:
 9. Test functions
