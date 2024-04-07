@@ -8,16 +8,16 @@
    * Roulette Wheel Selection :white_check_mark:
 3. Crossover methods:
    * Single-point :white_check_mark:
-   * Two-point
-   * Three-point
-   * Uniform
-   * Grain
-   * Methods from project I (1/3)
+   * Two-point :white_check_mark:
+   * Three-point :white_check_mark:
+   * Uniform :white_check_mark:
+   * Grain :white_check_mark:
+   * Methods from project I (2/3)
 4. Mutation:
    * Boundary
    * Single-point :white_check_mark:
    * Two-point
-5. Inversion operator
+5. Inversion operator :white_check_mark:
 6. Elitism strategy :white_check_mark:
 7. Configurable variables:
    * Variables number in fitness function
