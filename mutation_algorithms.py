@@ -26,6 +26,22 @@ class MutationAlgorithms:
                 variable_to_mutate = population[i, variable_to_mutate_index]
                 mutated_population[i, variable_to_mutate_index] = self._switch_bit(variable_to_mutate, bit_to_mutate)
         return mutated_population
+    
+    # def _boundary_mutation(self, population: np.ndarray) -> np.ndarray:
+    #     mutated_population = np.copy(population)
+
+    #     for i in range(len(population)):
+    #         if np.random.rand() < self.__mutation_rate:
+    #             variable_to_mutate_index = np.random.randint(0, self.__variables_number)
+
+    #             if np.random.rand() < 0.5:
+    #                 boundary_value = self.__min_values[variable_to_mutate_index]
+    #             else:
+    #                 boundary_value = self.__max_values[variable_to_mutate_index]
+
+    #             mutated_population[i, variable_to_mutate_index] = boundary_value
+        
+    #     return mutated_population
 
     @staticmethod
     def _switch_bit(chromosome: str, bit_to_mutate: int) -> str:

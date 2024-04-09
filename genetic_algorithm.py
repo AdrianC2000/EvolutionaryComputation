@@ -20,6 +20,10 @@ class GeneticAlgorithm:
         self.__binary_encoder = BinaryEncoder(precision, bounds[0], bounds[1])
         self.__variables_number = variables_number
 
+        self.fitness_history = []  # Store fitness of the best individual each iteration
+        self.average_fitness_history = []  # Store average fitness each iteration
+        self.std_dev_fitness_history = [] 
+
         binary_chain_length = self.__binary_encoder.get_binary_chain_length()
         self.__selection_algorithms = SelectionAlgorithms(selection_method)
         self.__tournaments_count = tournaments_count
@@ -35,25 +39,31 @@ class GeneticAlgorithm:
         population = self._initialize_population(population_size, self.__variables_number)
         best_fitness, best_individual = 0, None
 
-        for _ in range(epochs_number):
-            new_best_individual, new_best_fitness = self._get_best_individual(population)
-            if new_best_fitness > best_fitness:
-                best_individual = new_best_individual
-                best_fitness = new_best_fitness
+        with open('ga_results.txt', 'w') as file:
+            for epoch in range(epochs_number):
+                new_best_individual, new_best_fitness = self._get_best_individual(population)
+                if new_best_fitness > best_fitness:
+                    best_individual = new_best_individual
+                    best_fitness = new_best_fitness
 
-            selected_parents_population = self.__selection_algorithms.select_parents(
-                population,
-                tournaments_count=self.__tournaments_count,
-                fraction_selected=self.__fraction_selected,
-                is_min_searched=self.__is_min_searched
-            )
+                selected_parents_population = self.__selection_algorithms.select_parents(
+                    population,
+                    tournaments_count=self.__tournaments_count,
+                    fraction_selected=self.__fraction_selected,
+                    is_min_searched=self.__is_min_searched
+                )
 
-            selected_parents_encoded = self.__binary_encoder.encode_population(selected_parents_population)
-            children_encoded = self.__crossover_algorithms.perform_crossover(selected_parents_encoded)
-            children_mutated = self.__mutation_algorithms.perform_mutation(children_encoded)
-            children = self.__binary_encoder.decode_population(children_mutated)
-            children = self._invert_segments(children)
-            population = self._replace_population(population, children)
+                selected_parents_encoded = self.__binary_encoder.encode_population(selected_parents_population)
+                children_encoded = self.__crossover_algorithms.perform_crossover(selected_parents_encoded)
+                children_mutated = self.__mutation_algorithms.perform_mutation(children_encoded)
+                children = self.__binary_encoder.decode_population(children_mutated)
+                children = self._invert_segments(children)
+                population = self._replace_population(population, children)
+                self.fitness_history.append(new_best_fitness)
+                fitness_values = [FitnessFunction.fitness_function(individual) for individual in population]
+                self.average_fitness_history.append(np.mean(fitness_values))
+                self.std_dev_fitness_history.append(np.std(fitness_values))
+                file.write(f'Epoch {epoch + 1}, Best Fitness: {best_fitness}\n')
 
         return best_individual, best_fitness
 

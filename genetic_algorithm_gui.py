@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 from genetic_algorithm import GeneticAlgorithm
 
@@ -99,6 +101,35 @@ class GeneticAlgorithmGUI:
         # Run button
         ttk.Button(root, text="Run", command=self.run_algorithm).grid(row=4, column=0, padx=10, pady=5)
 
+    def plot_results(self, genetic_algorithm):
+        # Create a new Tkinter window
+        plot_window = tk.Toplevel(self.root)
+        plot_window.title("GA Performance Metrics")
+
+        # Create the figure
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
+
+        # Plotting the value of the function from each iteration
+        ax1.plot(genetic_algorithm.fitness_history, label='Best Value')
+        ax1.set_title('Best Value Over Iterations')
+        ax1.set_xlabel('Iteration')
+        ax1.set_ylabel('Value')
+        ax1.legend()
+
+        # Plotting the average and standard deviation
+        ax2.errorbar(range(len(genetic_algorithm.average_fitness_history)), genetic_algorithm.average_fitness_history, 
+                    yerr=genetic_algorithm.std_dev_fitness_history, label='Average Value', fmt='-o')
+        ax2.set_title('Average Value and Standard Deviation Over Iterations')
+        ax2.set_xlabel('Iteration')
+        ax2.set_ylabel('Value')
+        ax2.legend()
+
+        # Adding the plot to the Tkinter window
+        canvas = FigureCanvasTkAgg(fig, master=plot_window)
+        canvas.draw()
+        canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+
+
     def run_algorithm(self):
         bounds = (self.bounds_min.get(), self.bounds_max.get())
         is_min_searched = self.min_max.get() == "min"
@@ -114,6 +145,7 @@ class GeneticAlgorithmGUI:
                                                                              self.epochs_number.get())
 
         output_text = f"Best found individual: {best_individual}\nFitness: {best_fitness}"
+        self.plot_results(genetic_algorithm)
         messagebox.showinfo("Algorithm Output", output_text)
 
 
