@@ -5,12 +5,12 @@ from numpy import ndarray
 class FitnessFunction:
 
     @staticmethod
-    def fitness_function1(individual: ndarray) -> float:
+    def fitness_function(individual: ndarray) -> float:
         return float(np.sum(np.power(individual, 2)))
     
     # katsuura
     @staticmethod
-    def fitness_function(x: ndarray):
+    def fitness_function1(x: ndarray) -> float:
         sum_rana = 0
         
         for i in range(len(x) - 1):
@@ -26,7 +26,7 @@ class FitnessFunction:
     
     # rana
     @staticmethod
-    def fitness_function2(x):
+    def fitness_function2(x) -> float:
         D = len(x)
         term = 1.0 * 10/D**2
         for i in range(D):

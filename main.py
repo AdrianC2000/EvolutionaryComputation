@@ -4,16 +4,16 @@ if __name__ == "__main__":
     variables_number = 3
     bounds = (-10, 10)
     population_size = 100
-    epochs_number = 100
+    epochs_number = 200
     precision = 6
-    selection_method = "best"  # TODO - params
+    selection_method = "best"
     tournaments_count = 3
     fraction_selected = 0.34
     crossover_method = "mssx"
-    crossover_probability = 0.7
+    crossover_probability = 0.5
     mutation_method = "single-point"
     mutation_rate = 0.1
-    inversion_probability = 0.5
+    inversion_probability = 0.1
     elitism_ratio = 0.5
     is_min_searched = False
 
