@@ -1,13 +1,15 @@
-from typing import List, Tuple, Optional
+from typing import Tuple
 
 import numpy as np
 from numpy import ndarray
 
+from crossover_algorithms.crossover_algorithms import CrossoverAlgorithms
 
-class CrossoverAlgorithms:
+
+class CrossoverAlgorithmsBinary(CrossoverAlgorithms):
 
     def __init__(self, crossover_method: str, binary_chain_length: int, crossover_probability: float):
-        self.__METHODS = {
+        __METHODS = {
             "single-point": self._single_point_crossover,
             "two-point": self._two_point_crossover,
             "three-point": self._three_point_crossover,
@@ -17,31 +19,9 @@ class CrossoverAlgorithms:
             "three-parent": self._three_parent_crossover,
             "nonuniform": self._nonuniform_crossover,
         }
-        self.__crossover_method = self.__METHODS[crossover_method]
+        super().__init__(crossover_method, crossover_probability, __METHODS)
         self.__binary_chain_length = binary_chain_length
         self.__crossover_point = int(binary_chain_length / 2)
-        self.__crossover_probability = crossover_probability
-
-    def perform_crossover(self, selected_parents_encoded: ndarray) -> ndarray:
-        np.random.shuffle(selected_parents_encoded)
-        descendants = np.empty_like(selected_parents_encoded)
-
-        for i in range(0, len(selected_parents_encoded), 2):
-
-            if i + 1 >= len(selected_parents_encoded):
-                descendants[i] = selected_parents_encoded[i]
-                break
-
-            parent_a = selected_parents_encoded[i]
-            parent_b = selected_parents_encoded[i + 1]
-
-            if np.random.rand() > self.__crossover_probability:
-                descendants[i], descendants[i + 1] = parent_a, parent_b
-            else:
-                children = self.__crossover_method(parent_a, parent_b)
-                descendants[i], descendants[i + 1] = children
-
-        return descendants
 
     def _single_point_crossover(self, parent_a: ndarray, parent_b: ndarray) -> Tuple[ndarray, ndarray]:
         parent_a_combined = self._combine_parent(parent_a)

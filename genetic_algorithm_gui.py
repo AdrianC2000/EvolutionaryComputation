@@ -3,7 +3,7 @@ from tkinter import ttk, messagebox
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-from genetic_algorithm import GeneticAlgorithm
+from genetic_algorithms.genetic_algorithm import GeneticAlgorithm
 
 
 class GeneticAlgorithmGUI:
