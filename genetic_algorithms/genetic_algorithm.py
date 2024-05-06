@@ -4,7 +4,7 @@ from typing import Tuple, List
 import numpy as np
 from numpy import ndarray
 
-from fitness_function import FitnessFunction
+from fitness_functions import FitnessFunction
 from selection_algorithms import SelectionAlgorithms
 
 
@@ -12,14 +12,15 @@ class GeneticAlgorithm(ABC):
 
     def __init__(self, bounds: Tuple[int, int], variables_number: int, selection_method: str,
                  elitism_ratio: float, is_min_searched: bool = False, tournaments_count: int = 3,
-                 fraction_selected: float = 0.34):
+                 fraction_selected: float = 0.34, fitness_function: str = "square_sum"):
         self.__bounds = bounds
         self._variables_number = variables_number
-        self._selection_algorithms = SelectionAlgorithms(selection_method)
+        self._selection_algorithms = SelectionAlgorithms(selection_method, fitness_function)
         self.__elitism_ratio = elitism_ratio
         self._is_min_searched = is_min_searched
         self._tournaments_count = tournaments_count
         self._fraction_selected = fraction_selected
+        self._fitness_function = FitnessFunction(fitness_function).selected_function
 
         self._fitness_history = []
         self._average_fitness_history = []
@@ -31,14 +32,13 @@ class GeneticAlgorithm(ABC):
     def _initialize_population(self, population_size: int, variables_number: int) -> ndarray:
         return np.random.uniform(self.__bounds[0], self.__bounds[1], size=(population_size, variables_number))
 
-    @staticmethod
-    def _get_best_individual(population: ndarray) -> Tuple[ndarray, float]:
-        fitnesses = [FitnessFunction.fitness_function(individual) for individual in population]
+    def _get_best_individual(self, population: ndarray) -> Tuple[ndarray, float]:
+        fitnesses = [self._fitness_function(individual) for individual in population]
         best_index = np.argmax(fitnesses)
         return population[best_index], fitnesses[best_index]
 
     def _replace_population(self, population: ndarray, children: ndarray) -> ndarray:
-        fitness = [FitnessFunction.fitness_function(individual) for individual in population]
+        fitness = [self._fitness_function(individual) for individual in population]
         elites_count = int(self.__elitism_ratio * len(population))
 
         extremes = self._get_extremes(elites_count, fitness)

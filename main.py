@@ -24,15 +24,20 @@ if __name__ == "__main__":
     # crossover_method = "single-point"
     # mutation_method = "single-point"
 
+    # square_sum, katsuura, rana
+    fitness_function = "square_sum"
+
     if representation == "binary":
         genetic_algorithm = GeneticAlgorithmBinary(precision, bounds, variables_number, selection_method,
                                                    crossover_method, crossover_probability, mutation_method,
                                                    mutation_rate, inversion_probability, elitism_ratio,
-                                                   is_min_searched, tournaments_count, fraction_selected)
+                                                   fitness_function, is_min_searched, tournaments_count,
+                                                   fraction_selected)
     else:
         genetic_algorithm = GeneticAlgorithmReal(bounds, variables_number, selection_method, crossover_method,
                                                  crossover_probability, mutation_method, mutation_rate, elitism_ratio,
-                                                 is_min_searched, tournaments_count, fraction_selected)
+                                                 fitness_function, is_min_searched, tournaments_count,
+                                                 fraction_selected)
 
     best_individual, best_fitness = genetic_algorithm.find_best_solution(population_size, epochs_number)
     print(f"Best found individual: {best_individual}, with fitness: {best_fitness}")

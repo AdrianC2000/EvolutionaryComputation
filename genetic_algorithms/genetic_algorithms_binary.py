@@ -5,7 +5,6 @@ from numpy import ndarray
 
 from binary_encoder import BinaryEncoder
 from crossover_algorithms.crossover_algorithms_binary import CrossoverAlgorithmsBinary
-from fitness_function import FitnessFunction
 from genetic_algorithms.genetic_algorithm import GeneticAlgorithm
 from mutation_algorithms.mutation_algorithms_binary import MutationAlgorithmsBinary
 
@@ -14,10 +13,10 @@ class GeneticAlgorithmBinary(GeneticAlgorithm):
 
     def __init__(self, precision: int, bounds: Tuple[int, int], variables_number: int, selection_method: str,
                  crossover_method: str, crossover_probability: float, mutation_method: str, mutation_rate: float,
-                 inversion_probability: float, elitism_ratio: float,
+                 inversion_probability: float, elitism_ratio: float, fitness_function: str,
                  is_min_searched: bool = False, tournaments_count: int = 3, fraction_selected: float = 0.34):
         super().__init__(bounds, variables_number, selection_method, elitism_ratio, is_min_searched, tournaments_count,
-                         fraction_selected)
+                         fraction_selected, fitness_function)
         self.__binary_encoder = BinaryEncoder(precision, bounds[0], bounds[1])
         binary_chain_length = self.__binary_encoder.get_binary_chain_length()
 
@@ -54,7 +53,7 @@ class GeneticAlgorithmBinary(GeneticAlgorithm):
 
                 population = self._replace_population(population, children_inverted)
                 self._fitness_history.append(new_best_fitness)
-                fitness_values = [FitnessFunction.fitness_function(individual) for individual in population]
+                fitness_values = [self._fitness_function(individual) for individual in population]
                 self._average_fitness_history.append(np.mean(fitness_values))
                 self._std_dev_fitness_history.append(np.std(fitness_values))
                 file.write(f'Epoch {epoch + 1}, Best Fitness: {best_fitness}\n')
