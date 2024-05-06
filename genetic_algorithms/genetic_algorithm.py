@@ -22,9 +22,9 @@ class GeneticAlgorithm(ABC):
         self._fraction_selected = fraction_selected
         self._fitness_function = FitnessFunction(fitness_function).selected_function
 
-        self._fitness_history = []
-        self._average_fitness_history = []
-        self._std_dev_fitness_history = []
+        self.fitness_history = []
+        self.average_fitness_history = []
+        self.std_dev_fitness_history = []
 
     def find_best_solution(self, population_size: int, epochs_number: int) -> Tuple[ndarray, float]:
         pass
@@ -34,7 +34,10 @@ class GeneticAlgorithm(ABC):
 
     def _get_best_individual(self, population: ndarray) -> Tuple[ndarray, float]:
         fitnesses = [self._fitness_function(individual) for individual in population]
-        best_index = np.argmax(fitnesses)
+        if self._is_min_searched:
+            best_index = np.argmin(fitnesses)
+        else:
+            best_index = np.argmax(fitnesses)
         return population[best_index], fitnesses[best_index]
 
     def _replace_population(self, population: ndarray, children: ndarray) -> ndarray:

@@ -41,10 +41,10 @@ class GeneticAlgorithmReal(GeneticAlgorithm):
                 children_mutated = self.__mutation_algorithms.perform_mutation(children)
 
                 population = self._replace_population(population, children_mutated)
-                self._fitness_history.append(new_best_fitness)
+                self.fitness_history.append(new_best_fitness)
                 fitness_values = [self._fitness_function(individual) for individual in population]
-                self._average_fitness_history.append(np.mean(fitness_values))
-                self._std_dev_fitness_history.append(np.std(fitness_values))
+                self.average_fitness_history.append(np.mean(fitness_values))
+                self.std_dev_fitness_history.append(np.std(fitness_values))
                 file.write(f'Epoch {epoch + 1}, Best Fitness: {best_fitness}\n')
 
         return best_individual, best_fitness

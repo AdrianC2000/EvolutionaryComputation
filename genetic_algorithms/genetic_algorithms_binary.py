@@ -28,12 +28,14 @@ class GeneticAlgorithmBinary(GeneticAlgorithm):
 
     def find_best_solution(self, population_size: int, epochs_number: int) -> Tuple[ndarray, float]:
         population = self._initialize_population(population_size, self._variables_number)
-        best_fitness, best_individual = 0, None
+        best_fitness = 10000 if self._is_min_searched else -10000
+        best_individual = None
 
         with open('../ga_results.txt', 'w') as file:
             for epoch in range(epochs_number):
                 new_best_individual, new_best_fitness = self._get_best_individual(population)
-                if new_best_fitness > best_fitness:
+                if (not self._is_min_searched and new_best_fitness > best_fitness) or (
+                        self._is_min_searched and new_best_fitness < best_fitness):
                     best_individual = new_best_individual
                     best_fitness = new_best_fitness
 
@@ -52,10 +54,10 @@ class GeneticAlgorithmBinary(GeneticAlgorithm):
                 children_inverted = self._invert_segments(children)
 
                 population = self._replace_population(population, children_inverted)
-                self._fitness_history.append(new_best_fitness)
+                self.fitness_history.append(new_best_fitness)
                 fitness_values = [self._fitness_function(individual) for individual in population]
-                self._average_fitness_history.append(np.mean(fitness_values))
-                self._std_dev_fitness_history.append(np.std(fitness_values))
+                self.average_fitness_history.append(np.mean(fitness_values))
+                self.std_dev_fitness_history.append(np.std(fitness_values))
                 file.write(f'Epoch {epoch + 1}, Best Fitness: {best_fitness}\n')
 
         return best_individual, best_fitness
