@@ -16,17 +16,20 @@ class GeneticAlgorithmReal(GeneticAlgorithm):
                  fraction_selected: float = 0.34):
         super().__init__(bounds, variables_number, selection_method, elitism_ratio, is_min_searched, tournaments_count,
                          fraction_selected, fitness_function)
-        self.__crossover_algorithms = CrossoverAlgorithmsReal(crossover_method, crossover_probability, bounds)
+        self.__crossover_algorithms = CrossoverAlgorithmsReal(crossover_method, crossover_probability, bounds,
+                                                              is_min_searched, fitness_function)
         self.__mutation_algorithms = MutationAlgorithmsReal(mutation_method, mutation_rate, variables_number, bounds)
 
     def find_best_solution(self, population_size: int, epochs_number: int) -> Tuple[ndarray, float]:
         population = self._initialize_population(population_size, self._variables_number)
-        best_fitness, best_individual = 0, None
+        best_fitness = 10000 if self._is_min_searched else -10000
+        best_individual = None
 
         with open('../ga_results.txt', 'w') as file:
             for epoch in range(epochs_number):
                 new_best_individual, new_best_fitness = self._get_best_individual(population)
-                if new_best_fitness > best_fitness:
+                if (not self._is_min_searched and new_best_fitness > best_fitness) or (
+                        self._is_min_searched and new_best_fitness < best_fitness):
                     best_individual = new_best_individual
                     best_fitness = new_best_fitness
 

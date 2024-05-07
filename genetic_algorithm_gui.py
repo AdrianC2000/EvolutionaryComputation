@@ -1,8 +1,11 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import time
 
+from fitness_functions import FitnessFunction
 from genetic_algorithms.genetic_algorithm_real import GeneticAlgorithmReal
 from genetic_algorithms.genetic_algorithms_binary import GeneticAlgorithmBinary
 
@@ -73,8 +76,8 @@ class GeneticAlgorithmGUI:
         self.generate_min_max_frame(min_max_frame_real)
 
         # Run button
-        ttk.Button(tab_binary, text="Run", command=self.run_algorithm).grid(row=5, column=0, padx=10, pady=5)
-        ttk.Button(tab_real, text="Run", command=self.run_algorithm).grid(row=5, column=0, padx=10, pady=5)
+        ttk.Button(tab_binary, text="Run", command=lambda: self.run_algorithm("binary")).grid(row=5, column=0, padx=10, pady=5)
+        ttk.Button(tab_real, text="Run", command=lambda: self.run_algorithm("real")).grid(row=5, column=0, padx=10, pady=5)
         tab_control.pack(expand=1, fill="both")
 
     def generate_min_max_frame(self, min_max_frame):
@@ -87,10 +90,14 @@ class GeneticAlgorithmGUI:
             crossover_methods = ["arithmetical", "linear", "blend_alpha", "blend_alpha_and_beta", "average",
                                  "differential_evolution", "unfair_average", "gaussian_uniform"]
             mutation_methods = ["uniform", "gaussian"]
+            self.crossover_method.set(crossover_methods[0])
+            self.mutation_method.set(mutation_methods[0])
         else:
             crossover_methods = ["single-point", "two-point", "three-point", "uniform", "grain", "mssx", "three-parent",
                                  "nonuniform"]
             mutation_methods = ["single-point"]
+            self.crossover_method.set(crossover_methods[0])
+            self.mutation_method.set(mutation_methods[0])
 
         crossover_mutation_frame.grid(row=3, column=0, padx=10, pady=5, sticky="w")
         ttk.Label(crossover_mutation_frame, text="Crossover method:").grid(row=0, column=0, sticky="w")
@@ -129,22 +136,34 @@ class GeneticAlgorithmGUI:
     def generate_fitness_frame(self, fitness_frame):
         fitness_frame.grid(row=0, column=0, padx=10, pady=5, sticky="w")
         ttk.Label(fitness_frame, text="Fitness function:").grid(row=0, column=0, sticky="w")
-        ttk.Combobox(fitness_frame, textvariable=self.fitness_function,
-                     values=["square_sum", "katsuura", "rana"]).grid(row=0, column=1, sticky="w")
+        combo = ttk.Combobox(fitness_frame, textvariable=self.fitness_function,
+                             values=["square_sum", "rana", "hyperellipsoid"])
+        combo.grid(row=0, column=1, sticky="w")
+        combo.bind("<<ComboboxSelected>>", self.fitness_changed)
 
     def generate_variables_input(self, variables_frame):
         variables_frame.grid(row=1, column=0, padx=10, pady=5, sticky="w")
         ttk.Label(variables_frame, text="Number of variables:").grid(row=0, column=0, sticky="w")
         ttk.Entry(variables_frame, textvariable=self.variables_number, width=10).grid(row=0, column=1, sticky="w")
         ttk.Label(variables_frame, text="Bounds:").grid(row=1, column=0, sticky="w")
-        ttk.Entry(variables_frame, textvariable=self.bounds_min, width=5).grid(row=1, column=1, sticky="w")
-        ttk.Entry(variables_frame, textvariable=self.bounds_max, width=5).grid(row=1, column=2, sticky="w")
+        ttk.Entry(variables_frame, textvariable=self.bounds_min, width=10).grid(row=1, column=1, sticky="w")
+        ttk.Entry(variables_frame, textvariable=self.bounds_max, width=10).grid(row=1, column=2, sticky="w")
         ttk.Label(variables_frame, text="Population size:").grid(row=2, column=0, sticky="w")
         ttk.Entry(variables_frame, textvariable=self.population_size, width=10).grid(row=2, column=1, sticky="w")
         ttk.Label(variables_frame, text="Epochs number:").grid(row=3, column=0, sticky="w")
         ttk.Entry(variables_frame, textvariable=self.epochs_number, width=10).grid(row=3, column=1, sticky="w")
         ttk.Label(variables_frame, text="Precision:").grid(row=4, column=0, sticky="w")
         ttk.Entry(variables_frame, textvariable=self.precision, width=10).grid(row=4, column=1, sticky="w")
+
+    def fitness_changed(self, event):
+        selected_fitness = event.widget.get()
+        fitness_function = FitnessFunction(selected_fitness)
+        fitness_function.selected_function(np.ones(1))
+        bounds = fitness_function.suggested_bounds
+
+        if bounds:
+            self.bounds_min.set(bounds[0][0])
+            self.bounds_max.set(bounds[1][0])
 
     def plot_results(self, genetic_algorithm):
         # Create a new Tkinter window
@@ -174,11 +193,11 @@ class GeneticAlgorithmGUI:
         canvas.draw()
         canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
 
-    def run_algorithm(self):
+    def run_algorithm(self, binary_real: str):
         bounds = (self.bounds_min.get(), self.bounds_max.get())
         is_min_searched = self.min_max.get() == "min"
 
-        if self.binary_real.get() == "binary":
+        if binary_real == "binary":
             genetic_algorithm = GeneticAlgorithmBinary(self.precision.get(), bounds, self.variables_number.get(),
                                                        self.selection_methods.get(), self.crossover_method.get(),
                                                        self.crossover_probability.get(), self.mutation_method.get(),
@@ -194,10 +213,12 @@ class GeneticAlgorithmGUI:
                                                      is_min_searched, self.tournaments_count.get(),
                                                      self.fraction_selected.get())
 
+        start_time = time.time()
         best_individual, best_fitness = genetic_algorithm.find_best_solution(self.population_size.get(),
                                                                              self.epochs_number.get())
+        time_diff = time.time() - start_time
 
-        output_text = f"Best found individual: {best_individual}\nFitness: {best_fitness}"
+        output_text = f"Best found individual: {best_individual}\nFitness: {best_fitness}\nTime: {time_diff} sec"
         self.plot_results(genetic_algorithm)
         messagebox.showinfo("Algorithm Output", output_text)
 
