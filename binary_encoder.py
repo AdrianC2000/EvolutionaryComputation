@@ -32,9 +32,9 @@ class BinaryEncoder:
         return binary_fractional_part
 
     def decode_population(self, encoded_population: ndarray) -> ndarray:
-        return np.apply_along_axis(self._decode_individual, 1, encoded_population)
+        return np.apply_along_axis(self.decode_individual, 1, encoded_population)
 
-    def _decode_individual(self, encoded_individual: ndarray) -> ndarray:
+    def decode_individual(self, encoded_individual: ndarray) -> ndarray:
         vectorized_method = np.vectorize(self.decode_from_binary)
         return vectorized_method(encoded_individual)
 

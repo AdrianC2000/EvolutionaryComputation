@@ -2,20 +2,37 @@
 import logging
 
 import benchmark_functions as bf
-import numpy
+import numpy as np
 import pygad
+
+from binary_encoder import BinaryEncoder
 
 # Konfiguracja algorytmu genetycznego
 
-num_genes = 2
+is_binary = True
+binary_precision = 6
+num_bits = 6
+num_genes = 3
+
 func_ackley = bf.Ackley(n_dimensions=num_genes)
 func_schwefel = bf.Schwefel(n_dimensions=num_genes)
 func_rana = bf.Rana(n_dimensions=num_genes)
 
+if is_binary:
+    num_genes *= num_bits
+
 func = func_schwefel
+
+init_range_low, init_range_high = (0, 2) if is_binary else (
+    func.suggested_bounds()[0][0], func.suggested_bounds()[1][0])
+encoder = BinaryEncoder(binary_precision, func.suggested_bounds()[0][0], func.suggested_bounds()[1][0])
 
 
 def fitness_func(ga_instance, solution, solution_idx, is_min=False):
+    if is_binary:
+        bit_str_combined = ''.join(solution.astype(str))
+        individuals = [bit_str_combined[i * num_bits:(i + 1) * num_bits] for i in range(int(num_genes / num_bits))]
+        solution = encoder.decode_individual(np.array(individuals))
     fitness = func(solution)
     return 1. / fitness if is_min else fitness
 
@@ -27,30 +44,35 @@ def on_generation(ga_instance, is_min=False):
     fitness = 1. / solution_fitness if is_min else solution_fitness
     ga_instance.logger.info("Best    = {fitness}".format(fitness=fitness))
     ga_instance.logger.info("Individual    = {solution}".format(solution=repr(solution)))
+    if is_binary:
+        bit_str_combined = ''.join(solution.astype(str))
+        individuals = [bit_str_combined[i * num_bits:(i + 1) * num_bits] for i in range(int(num_genes / num_bits))]
+        solution_real = encoder.decode_individual(np.array(individuals))
+        ga_instance.logger.info("Individual real    = {solution}".format(solution=repr(solution_real)))
 
     tmp = [1. / x if is_min else x for x in
            ga_instance.last_generation_fitness]  # ponownie odwrotność by zrobić sobie dobre statystyki
 
-    ga_instance.logger.info("Min    = {min}".format(min=numpy.min(tmp)))
-    ga_instance.logger.info("Max    = {max}".format(max=numpy.max(tmp)))
-    ga_instance.logger.info("Average    = {average}".format(average=numpy.average(tmp)))
-    ga_instance.logger.info("Std    = {std}".format(std=numpy.std(tmp)))
+    ga_instance.logger.info("Min    = {min}".format(min=np.min(tmp)))
+    ga_instance.logger.info("Max    = {max}".format(max=np.max(tmp)))
+    ga_instance.logger.info("Average    = {average}".format(average=np.average(tmp)))
+    ga_instance.logger.info("Std    = {std}".format(std=np.std(tmp)))
     ga_instance.logger.info("\r\n")
 
 
 fitness_function = fitness_func
-is_min = False
+is_min = True
 num_generations = 100
 sol_per_pop = 80
 num_parents_mating = 50
-# boundary = func.suggested_bounds() #możemy wziąć stąd zakresy
-init_range_low = -500
-init_range_high = 500
+init_range_low, init_range_high = (0, 2) if is_binary else (
+    func.suggested_bounds()[0][0], func.suggested_bounds()[1][0])
+random_mutation_min_val, random_mutation_max_val = (0, 2) if is_binary else (-32.768, 32.768)
 mutation_num_genes = 1
 parent_selection_type = "tournament"
-crossover_type = "uniform"
+crossover_type = "single_point"
 mutation_type = "random"
-
+gene_type = int if is_binary else float
 # Konfiguracja logowania
 
 level = logging.DEBUG
@@ -74,14 +96,16 @@ ga_instance = pygad.GA(num_generations=num_generations,
                                                                                              is_min=is_min),
                        init_range_low=init_range_low,
                        init_range_high=init_range_high,
+                       gene_type=gene_type,
                        mutation_num_genes=mutation_num_genes,
+                       mutation_by_replacement=is_binary,
                        parent_selection_type=parent_selection_type,
                        crossover_type=crossover_type,
                        mutation_type=mutation_type,
                        keep_elitism=1,
                        K_tournament=3,
-                       random_mutation_max_val=32.768,
-                       random_mutation_min_val=-32.768,
+                       random_mutation_max_val=random_mutation_max_val,
+                       random_mutation_min_val=random_mutation_min_val,
                        logger=logger,
                        on_generation=lambda ga_instance: on_generation(ga_instance, is_min=is_min),
                        parallel_processing=['thread', 4])
