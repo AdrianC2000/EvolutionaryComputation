@@ -137,7 +137,7 @@ class GeneticAlgorithmGUI:
         fitness_frame.grid(row=0, column=0, padx=10, pady=5, sticky="w")
         ttk.Label(fitness_frame, text="Fitness function:").grid(row=0, column=0, sticky="w")
         combo = ttk.Combobox(fitness_frame, textvariable=self.fitness_function,
-                             values=["square_sum", "rana", "hyperellipsoid"])
+                             values=["square_sum", "rana", "hyperellipsoid", "schwefel"])
         combo.grid(row=0, column=1, sticky="w")
         combo.bind("<<ComboboxSelected>>", self.fitness_changed)
 

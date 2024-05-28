@@ -18,7 +18,6 @@ class CrossoverAlgorithmsReal(CrossoverAlgorithms):
             "blend_alpha": self._blend_alpha_crossover,
             "blend_alpha_and_beta": self._blend_alpha_and_beta_crossover,
             "average": self._average_crossover,
-            "differential_evolution": self._differential_evolution_crossover,  # BARY TO TWOJE
             "unfair_average": self._unfair_average_crossover,  # PIOTER TO TWOJE
             "gaussian_uniform": self._gaussian_uniform_crossover,
         }
@@ -118,7 +117,7 @@ class CrossoverAlgorithmsReal(CrossoverAlgorithms):
 
                 self.update_kids(index, new_x, new_y, x_child, y_child)
 
-        return parent_x, parent_y
+        return x_child, y_child
 
     def _average_crossover(self, parent_a: ndarray, parent_b: ndarray) -> Tuple[ndarray, ndarray]:
         child_a = np.copy(parent_a)
@@ -132,10 +131,6 @@ class CrossoverAlgorithmsReal(CrossoverAlgorithms):
             if self._individual_in_bounds(new_child_b):
                 child_b = new_child_b
         return child_a, child_b
-
-    def _differential_evolution_crossover(self, parent_a: ndarray, parent_b: ndarray) -> Tuple[ndarray, ndarray]:
-        # TODO
-        return parent_a, parent_b
 
     def _unfair_average_crossover(self, X_parent: ndarray, Y_parent: ndarray) -> Tuple[ndarray, ndarray]:
         c = 2
