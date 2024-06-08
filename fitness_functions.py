@@ -13,8 +13,15 @@ class FitnessFunction:
             "schwefel": self._schwefel,
             "ackley": self._ackley
         }
+        self.__BOUNDS = {
+            "square_sum": [-100, 100],
+            "rana": bf.Rana().suggested_bounds(),
+            "hyperellipsoid": bf.Hyperellipsoid().suggested_bounds(),
+            "schwefel": bf.Schwefel().suggested_bounds(),
+            "ackley": bf.Ackley().suggested_bounds()
+        }
 
-        self.suggested_bounds = None
+        self.suggested_bounds = self.__BOUNDS[fitness_function]
         self.selected_function = self.__FUNCTIONS[fitness_function]
 
     def _square_sum(self, individual: ndarray) -> float:

@@ -21,34 +21,35 @@ mutation_percent_genes = 20
 mutation_probability = 0.2
 
 print("Please choose the chromosome representation:\n1. Binary\n2. Real")
-binary_choice = input()
+# binary_choice = input()
 
-if binary_choice == '1':
-    is_binary = True
-elif binary_choice == '2':
-    is_binary = False
-else:
-    print("Invalid input. Please enter 1 or 2.")
-    sys.exit()
+# if binary_choice == '1':
+is_binary = True
+# elif binary_choice == '2':
+#     is_binary = False
+# else:
+#     print("Invalid input. Please enter 1 or 2.")
+#     sys.exit()
 
 print("Please choose the fitness function:\n1. Square Sum\n2. Rana\n3. Hyperellipsoid\n4. Schwefel\n5. Ackley")
-fitness_function_choice = input()
+# fitness_function_choice = input()
 
-if fitness_function_choice == '1':
-    fitness_function = 'square_sum'
-elif fitness_function_choice == '2':
-    fitness_function = 'rana'
-elif fitness_function_choice == '3':
-    fitness_function = 'hyperellipsoid'
-elif fitness_function_choice == '4':
-    fitness_function = 'schwefel'
-elif fitness_function_choice == '5':
-    fitness_function = 'ackley'
-else:
-    print("Invalid input")
-    sys.exit()
+# if fitness_function_choice == '1':
+#     fitness_function = 'square_sum'
+# elif fitness_function_choice == '2':
+fitness_function = 'rana'
+# elif fitness_function_choice == '3':
+#     fitness_function = 'hyperellipsoid'
+# elif fitness_function_choice == '4':
+#     fitness_function = 'schwefel'
+# elif fitness_function_choice == '5':
+#     fitness_function = 'ackley'
+# else:
+#     print("Invalid input")
+#     sys.exit()
 
-num_genes = int(input("Choose number of genes: "))
+# num_genes = int(input("Choose number of genes: "))
+num_genes = 8
 
 random_mutation_min_val, random_mutation_max_val = (0, 2) if is_binary else (-32.768, 32.768)
 gene_type = int if is_binary else float
@@ -63,90 +64,94 @@ if is_binary:
     num_genes *= num_bits
 
 print("Please choose extreme:\n1. Min\n2. Max")
-min_max_choice = input()
+# min_max_choice = input()
 
-if min_max_choice == '1':
-    is_min = True
-elif min_max_choice == '2':
-    is_min = False
-else:
-    print("Invalid input")
-    sys.exit()
+# if min_max_choice == '1':
+is_min = True
+# elif min_max_choice == '2':
+#     is_min = False
+# else:
+#     print("Invalid input")
+#     sys.exit()
 
 print("Please choose selection method:\n1. tournament\n2. rws\n3. random")
-parent_selection_type_choice = input()
+# parent_selection_type_choice = input()
 
-if parent_selection_type_choice == '1':
-    parent_selection_type = 'tournament'
-elif parent_selection_type_choice == '2':
-    parent_selection_type = 'rws'
-elif parent_selection_type_choice == '3':
-    parent_selection_type = 'random'
-else:
-    print("Invalid input")
-    sys.exit()
+# if parent_selection_type_choice == '1':
+parent_selection_type = 'tournament'
+# elif parent_selection_type_choice == '2':
+#     parent_selection_type = 'rws'
+# elif parent_selection_type_choice == '3':
+#     parent_selection_type = 'random'
+# else:
+#     print("Invalid input")
+#     sys.exit()
 
 if is_binary:
-    print("Please choose crossover method:\n1. single_point\n2. two_points\n3. uniform\n4. three-point\n5. grain\n6. "
-          "mssx\n7. three-parent\n8. nonuniform")
-    crossover_choice = input()
+    # print("Please choose crossover method:\n1. single_point\n2. two_points\n3. uniform\n4. three-point\n5. grain\n6. "
+    #       "mssx\n7. three-parent\n8. nonuniform")
+    # crossover_choice = input()
     crossovers_pygad_binary = CrossoverAlgorithmsPyGADBinary(encoder.get_binary_chain_length())
-    if crossover_choice == '1':
-        crossover_type = 'single_point'
-    elif crossover_choice == '2':
-        crossover_type = 'two_points'
-    elif crossover_choice == '3':
-        crossover_type = 'uniform'
-    elif crossover_choice == '4':
-        crossover_type = crossovers_pygad_binary.get_methods()['three-point']
-    elif crossover_choice == '5':
-        crossover_type = crossovers_pygad_binary.get_methods()['grain']
-    elif crossover_choice == '6':
-        crossover_type = crossovers_pygad_binary.get_methods()['mssx']
-    elif crossover_choice == '7':
-        crossover_type = crossovers_pygad_binary.get_methods()['three-parent']
-    elif crossover_choice == '8':
-        crossover_type = crossovers_pygad_binary.get_methods()['nonuniform']
-    else:
-        print("Invalid input")
-        sys.exit()
+    # if crossover_choice == '1':
+    crossover_type = 'single_point'
+    # elif crossover_choice == '2':
+    #     crossover_type = 'two_points'
+    # elif crossover_choice == '3':
+    #     crossover_type = 'uniform'
+    # elif crossover_choice == '4':
+    #     crossover_type = crossovers_pygad_binary.get_methods()['three-point']
+    # elif crossover_choice == '5':
+    #     crossover_type = crossovers_pygad_binary.get_methods()['grain']
+    # elif crossover_choice == '6':
+    #     crossover_type = crossovers_pygad_binary.get_methods()['mssx']
+    # elif crossover_choice == '7':
+    #     crossover_type = crossovers_pygad_binary.get_methods()['three-parent']
+    # elif crossover_choice == '8':
+    #     crossover_type = crossovers_pygad_binary.get_methods()['nonuniform']
+    # else:
+    #     print("Invalid input")
+    #     sys.exit()
 else:
-    print("Please choose crossover method:\n1. arithmetical\n2. linear\n3. blend_alpha\n4. blend_alpha_and_beta\n5. "
-          "average\n6. unfair_average\n7. gaussian_uniform")
-    crossover_choice = input()
+    # print("Please choose crossover method:\n1. arithmetical\n2. linear\n3. blend_alpha\n4. blend_alpha_and_beta\n5. "
+    #       "average\n6. unfair_average\n7. gaussian_uniform")
+    # crossover_choice = input()
     crossovers_pygad_real = CrossoverAlgorithmsPyGADReal((init_range_low, init_range_high), is_min, fitness_function)
-    if crossover_choice == '1':
-        crossover_type = crossovers_pygad_real.get_methods()['arithmetical']
-    elif crossover_choice == '2':
-        crossover_type = crossovers_pygad_real.get_methods()['linear']
-    elif crossover_choice == '3':
-        crossover_type = crossovers_pygad_real.get_methods()['blend_alpha']
-    elif crossover_choice == '4':
-        crossover_type = crossovers_pygad_real.get_methods()['blend_alpha_and_beta']
-    elif crossover_choice == '5':
-        crossover_type = crossovers_pygad_real.get_methods()['average']
-    elif crossover_choice == '6':
-        crossover_type = crossovers_pygad_real.get_methods()['unfair_average']
-    elif crossover_choice == '7':
-        crossover_type = crossovers_pygad_real.get_methods()['gaussian_uniform-parent']
-    else:
-        print("Invalid input")
-        sys.exit()
+    # if crossover_choice == '1':
+    crossover_type = crossovers_pygad_real.get_methods()['arithmetical']
+    # elif crossover_choice == '2':
+    #     crossover_type = crossovers_pygad_real.get_methods()['linear']
+    # elif crossover_choice == '3':
+    #     crossover_type = crossovers_pygad_real.get_methods()['blend_alpha']
+    # elif crossover_choice == '4':
+    #     crossover_type = crossovers_pygad_real.get_methods()['blend_alpha_and_beta']
+    # elif crossover_choice == '5':
+    #     crossover_type = crossovers_pygad_real.get_methods()['average']
+    # elif crossover_choice == '6':
+    #     crossover_type = crossovers_pygad_real.get_methods()['unfair_average']
+    # elif crossover_choice == '7':
+    #     crossover_type = crossovers_pygad_real.get_methods()['gaussian_uniform-parent']
+    # else:
+    #     print("Invalid input")
+    #     sys.exit()
 
-print("Please choose mutation method:\n1. random\n2. swap")
+# print("Please choose mutation method:\n1. random\n2. swap")
+# if not is_binary:
+#     print("3. gaussian")
+# mutation_choice = input()
+# if mutation_choice == '1':
 if not is_binary:
-    print("3. gaussian")
-mutation_choice = input()
-if mutation_choice == '1':
-    mutation_type = 'random'
-elif mutation_choice == '2':
-    mutation_type = 'swap'
-elif mutation_choice == '3' and not is_binary:
     mutations_pygad_real = MutationAlgorithmsPyGADReal(mutation_probability, (init_range_low, init_range_high))
     mutation_type = mutations_pygad_real.get_methods()["gaussian"]
 else:
-    print("Invalid input")
-    sys.exit()
+    mutation_type = 'random'
+# elif mutation_choice == '2':
+#     mutation_type = 'swap'
+# elif mutation_choice == '3' and not is_binary:
+#     mutations_pygad_real = MutationAlgorithmsPyGADReal(mutation_probability, (init_range_low, init_range_high))
+#     mutation_type = mutations_pygad_real.get_methods()["gaussian"]
+# else:
+#     print("Invalid input")
+#     sys.exit()
 
 
 def fitness_func(ga_instance, solution, solution_idx, is_min=False):

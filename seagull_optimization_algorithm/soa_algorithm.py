@@ -13,7 +13,7 @@ class SoaAlgorithm:
     def find_result(self) -> Agent:
         min_bound, max_bound = self.__parameters.common_parameters.bounds
         problem = {
-            "obj_func": self.__parameters.common_parameters.fitness_function.selected_function,
+            "obj_func": self.__parameters.common_parameters.fitness_function,
             "bounds": FloatVar(lb=(min_bound,) * self.__parameters.common_parameters.variables_number,
                                ub=(max_bound,) * self.__parameters.common_parameters.variables_number),
             "minmax": self.__parameters.common_parameters.minmax,
