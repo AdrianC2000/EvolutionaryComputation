@@ -36,8 +36,9 @@ def fitness_func(ga_instance, solution, solution_idx, parameters, is_min=False):
     return 1. / fitness if is_min else fitness
 
 
-def on_generation(ga_instance):
-    ga_instance.logger.info(f"Epoch no {ga_instance.generations_completed} done, fitness: {ga_instance.best_solution()[1]}")
+def on_generation(ga_instance, is_min):
+    fitness = 1. / ga_instance.best_solution()[1] if is_min else ga_instance.best_solution()[1]
+    ga_instance.logger.info(f"Epoch no {ga_instance.generations_completed} done, fitness: {fitness}")
 
 
 class GaAlgorithm:
@@ -51,7 +52,7 @@ class GaAlgorithm:
         is_min = self.__parameters.common_parameters.minmax == "min"
         gene_type = int if self.__parameters.is_binary else float
         random_mutation_min_val, random_mutation_max_val = (0, 2) if self.__parameters.is_binary else (
-        self.__parameters.common_parameters.bounds[0], self.__parameters.common_parameters.bounds[1])
+            self.__parameters.common_parameters.bounds[0], self.__parameters.common_parameters.bounds[1])
 
         encoder = BinaryEncoder(BINARY_PRECISION, self.__parameters.common_parameters.bounds[0],
                                 self.__parameters.common_parameters.bounds[1])
@@ -83,7 +84,7 @@ class GaAlgorithm:
                                random_mutation_max_val=random_mutation_max_val,
                                random_mutation_min_val=random_mutation_min_val,
                                logger=logger,
-                               on_generation=lambda ga_instance: on_generation(ga_instance),
+                               on_generation=lambda ga_instance: on_generation(ga_instance, is_min),
                                parallel_processing=['thread', 4])
 
         ga_instance.run()
@@ -96,4 +97,5 @@ class GaAlgorithm:
             best_solution = [float(encoder.decode_individual(x))
                              for x in individuals_ndarray]
             return best_solution, ga_instance.best_solution()[1]
-        return ga_instance.best_solution()[0], ga_instance.best_solution()[1]
+        fitness = 1. / ga_instance.best_solution()[1] if is_min else ga_instance.best_solution()[1]
+        return ga_instance.best_solution()[0], fitness
